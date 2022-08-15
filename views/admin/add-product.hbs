@@ -1,0 +1,64 @@
+<div class="main-content">
+  <section>
+    <div class="container padding-left:10px mt-5">
+      <div class="col-md-6">
+        <h2 class="text-center">Add Product</h2>
+        <form
+          action="/admin/add-product"
+          method="post"
+          id="userLogin"
+          enctype="multipart/form-data"
+        >
+          <div class="form-outline mb-4">
+            <input
+              name="product"
+              type="text"
+              class="form-control"
+              placeholder="Enter Product Name"
+            />
+          </div>
+          <div class="form-outline mb-4">
+            <select
+              name="Category"
+              class="form-select form-select-md mb-3 form-control"
+              aria-label=".form-select-lg example"
+              id="formGroupExampleInput"
+            >
+              <option id="formGroupExampleInput" selected>Set Category</option>
+              {{#each category}}
+                <option value={{this.category}}>{{this.category}}</option>
+              {{/each}}
+            </select>
+          </div>
+          <div class="form-outline mb-4">
+            <input
+              name="author"
+              type="text"
+              class="form-control"
+              placeholder="Enter Author Name"
+            />
+          </div>
+
+          <div class="form-outline mb-4">
+            <input
+              name="price"
+              type="text"
+              class="form-control"
+              placeholder="Enter price of the product"
+            />
+          </div>
+          <div class="form-outline mb-4">
+            <input
+              name="image"
+              type="file"
+              class="form-control"
+              placeholder="Chose product image"
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>

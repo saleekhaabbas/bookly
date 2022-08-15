@@ -1,0 +1,54 @@
+<div class="main-content">
+<section>
+  <div class="container pt-5">
+    <table class="table table-striped padding-top:10px" id="userTable">
+      <thead>
+        <tr>
+          <th scope="col">Index</th>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Mobile no</th>
+          {{!-- <th scope="col">Password</th> --}}
+           <th scope="col">Block user</th>
+           <th scope="col">View order</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each userDetails}}
+          <tr>
+            <th scope="row">{{inc @index}}</th>
+            <td>{{this.name}}</td>
+            <td>{{this.email}}</td>
+            <td>{{this.mobile}}</td>
+            {{!-- <td>{{this.password1}}</td> --}}
+             <td>{{#if blockUsers}}
+                <a class="btn btn-success" href="/admin/user-management/unblock-users/{{this._id}}"
+                onclick="return confirm('Are you sure you want to unblock{{this.name}}?')">Unblock</a>
+                {{else}}
+                <a class="btn btn-danger" href="/admin/user-management/block-users/{{this._id}}"
+                onclick="return confirm('Are you sure you want to block{{this.name}}?')">Block</a>
+                {{/if}}
+             </td>
+             <td> 
+              <a class="btn btn-light" href="/admin/view-order/{{this._id}}">View order</a>
+             </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  
+</section>
+</div>
+<script>
+    $(document).ready(function () {
+
+
+        $('#userTable').wrap('<div id="hide" style="display:none"/>');
+
+        $('#hide').css('display', 'block');
+    });
+
+
+    var table = $('#userTable').DataTable();
+</script>

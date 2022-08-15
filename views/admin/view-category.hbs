@@ -1,0 +1,58 @@
+<div class="main-content">
+  <section>
+    <div class="row">
+      <a href="/admin/add-category" class="btn btn-success ml-5 mt-5">Add
+        Category</a>
+    </div>
+    <div class="container pt-3">
+      <table class="table table-striped padding-top:10px" id="catTable">
+        <thead>
+          <tr>
+            <th scope="col">Index</th>
+            <th scope="col">Category Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Image</th>
+            <th scope="col">Edit Category</th>
+            <th scope="col">Delete Category</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each category}}
+            <tr>
+              <th scope="row">{{inc @index}}</th>
+              <td>{{this.category}}</td>
+              <td>{{this.description}}</td>
+              <td><img
+                  style="width: 50px;height: 50px;"
+                  src="../../public/product-images/{{this.image}}"
+                  alt=""
+                /></td>
+              <td><a
+                  href="/admin/edit-category/{{this._id}}"
+                  class="btn btn-primary"
+                >Edit</a></td>
+              <td><a
+                  href="/admin/delete-category/{{this._id}}"
+                  class="btn btn-danger"
+                  onclick="return confirm('Are you sure you want to delete this category')"
+                >Delete</a></td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+</div>
+<script>
+    $(document).ready(function () {
+
+
+        $('#catTable').wrap('<div id="hide" style="display:none"/>');
+
+        $('#hide').css('display', 'block');
+    });
+
+
+    var table = $('#catTable').DataTable();
+</script>

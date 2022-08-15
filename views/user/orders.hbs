@@ -1,0 +1,51 @@
+<section>
+  <div class="container">
+
+    <table class="table mt-5">
+      <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Address</th>
+          <th scope="col">Pincode</th>
+          <th scope="col">Mobile</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Payment</th>
+          <th scope="col">Status</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each orders}}
+          <tr>
+
+            <td scope="row">{{this.date}}</td>
+            <td scope="row">{{this.deliveryDetails.address}}</td>
+            <td scope="row">{{this.deliveryDetails.pincode}}</td>
+            <td scope="row">{{this.deliveryDetails.mobile}}</td>
+            <td scope="row">{{this.totalAmount}}</td>
+            <td scope="row">{{this.paymentMethod}}</td>
+            <td scope="row">{{this.status}}</td>
+            <td scope="row">
+              <a
+                href="/view-order-products/{{this._id}}"
+                class="btn btn-primary"
+              >View Products</a>
+              </td>
+              {{#if deliveryDetails.action}}
+              <td scope="row">
+               <a
+                href="/cancel-order/{{this._id}}"
+                class="btn btn-danger"
+              >Cancel order</a>
+            </td>
+            {{else}}
+            <td scope="row" class="text-danger">Order canceled</td>
+            {{/if}}
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+</section>
