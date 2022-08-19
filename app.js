@@ -18,11 +18,11 @@ app.set("view engine", "hbs");
 app.engine(
   "hbs",
   hbs.engine({
-    helpers:{
-      inc:(value)=>{
-      return parseInt(value)+1;
-      }
-        },
+    helpers: {
+      inc: (value) => {
+        return parseInt(value) + 1;
+      },
+    },
     extname: "hbs",
     defaultLayout: "layout",
     layoutDir: __dirname + "/views/layouts/",
@@ -50,7 +50,7 @@ app.use("/admin", adminRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   // next(createError(404, { layout: "layout" }));
-  res.render('error',{ layout: "layout" })
+  res.render("error", { layout: "layout" });
 });
 
 // error handler

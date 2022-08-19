@@ -1,0 +1,106 @@
+{{!-- <div class="main-content">
+<div class="container-fluid pt-4 px-4">
+  <div class="row g-4">
+    <div class="col-12">
+      <div class="container-fluid d-flex">
+        <a style="margin-left: auto;" href="/admin/generate-coupon"><button
+            class="btn btn-success"
+          >GENERATE COUPON</button></a>
+      </div>
+      <div class="bg-secondary rounded h-100 p-4">
+        <h6 class="mb-4">Coupons</h6>
+        <div class="table-responsive">
+          <table
+            class="table table-bordered"
+            style="color:#fff"
+          >
+            <thead>
+              <tr>
+                <th scope="col">NO:</th>
+                <th scope="col">Coupon</th>
+                <th scope="col">Offer in %</th>
+                <th scope="col">Validity</th>
+                <th scope="col">Action</th>
+
+              </tr>
+            </thead>
+            {{#each coupons}}
+              <tbody>
+
+                <tr>
+                  <th sope="row">{{@index}}</th>
+                  <td>{{this.Name}}</td>
+                  <td>{{this.Offer}}</td>
+                  <td>{{this.validity}}</td>
+
+                  <td>
+                    <a href="/admin/delete-coupon/{{this._id}}">
+                      <button
+                        class="text-white"
+                        style="background-color: rgb(22, 17, 17);border-color: rgb(196, 24, 24);border-radius:5px; width: 90px;border-width: 4px"
+                        onclick="return confirm('Do you want to delete ?')"
+                      >REMOVE
+                      </button>
+                    </a>
+                  </td>
+                </tr>
+
+              </tbody>
+            {{/each}}
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div> --}}
+
+<div class="main-content">
+  <section>
+    <div class="row">
+      <a href="/admin/generate-coupon" class="btn btn-success ml-5 mt-5">GENERATE COUPON</a>
+    </div>
+    <div class="container pt-3">
+      <table class="table table-striped padding-top:10px" id="cTable">
+        <thead>
+          <tr>
+            <th scope="col">Index</th>
+            <th scope="col">Coupon</th>
+            <th scope="col">Offer in %</th>
+            <th scope="col">Validity</th>
+            <th scope="col">Action</th>
+          
+          </tr>
+        </thead>
+        <tbody>
+        {{#each coupons}}
+            <tr>
+              <th scope="row">{{inc @index}}</th>
+              <td>{{this.Name}}</td>
+              <td>{{this.Offer}}</td>
+               <td>{{this.validity}}</td>
+              <td><a
+                  href="/admin/delete-coupon/{{this._id}}"
+                  class="btn btn-danger"
+                  onclick="return confirm('Are you sure you want to delete this coupon?')"
+                >Delete</a></td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+</div>
+<script>
+    $(document).ready(function () {
+
+
+        $('#cTable').wrap('<div id="hide" style="display:none"/>');
+
+        $('#hide').css('display', 'block');
+    });
+
+
+    var table = $('#cTable').DataTable();
+</script>

@@ -5,7 +5,8 @@ const adminHelper = require("../helpers/admin-helper");
 const categoryHelpers = require("../helpers/category-helpers");
 const productHelper = require("../helpers/product-helper");
 const userHelper = require("../helpers/user-helper");
-const moment=require("moment")
+const moment = require("moment");
+const bannerHelper = require("../helpers/banner-helper");
 // const categoryHelper = require("../helpers/category-helpers");
 const verifyLogin = (req, res, next) => {
   if (req.session.admin.loggedIn) {
@@ -19,6 +20,7 @@ const verifyLogin = (req, res, next) => {
 router.get("/", function (req, res, next) {
   const adminData = req.session.adminloggedIn;
   if (adminData) {
+    
     res.render("admin/admin-page", { layout: "layout-admin" });
   } else {
     res.redirect("/admin/login");
@@ -160,9 +162,7 @@ router.get("/user-management/unblock-users/:id", (req, res) => {
 
 //view products
 router.get("/view-product", (req, res) => {
-
   productHelper.getAllProduct().then((product) => {
-   
     res.render("admin/view-product", { layout: "layout-admin", product });
   });
 });
@@ -229,72 +229,113 @@ router.get("/delete-product/:id", (req, res) => {
     res.redirect("/admin/view-product");
   });
 });
-router.get('/view-order/:id',async(req,res)=>{
-  let userId=req.params.id
+router.get("/view-order/:id", async (req, res) => {
+  let userId = req.params.id;
 
   console.log(userId);
 
-  let userOrders= await userHelper.getUserOrders(userId)
+  let userOrders = await userHelper.getUserOrders(userId);
 
-  userOrders.forEach(element => {
-    element.date = moment(element.date).format("DD-MM-YY")
-
+  userOrders.forEach((element) => {
+    element.date = moment(element.date).format("DD-MM-YY");
+  });
+  res.render("admin/view-order", { layout: "layout-admin", userOrders });
 });
-    res.render("admin/view-order",{layout: "layout-admin",userOrders})
 
-  })
+router.get("/view-coupon", (req, res) => {
+  // console.log("call check");
+  // res.render("admin/view-coupon");
+  adminHelper.getCoupons().then((coupons) => {
+    console.log("second check", coupons);
+    res.render("admin/view-coupon", { layout: "layout-admin", coupons });
+    // res.render("admin/view-coupon", coupons);
+  });
+});
 
-// router.get("/vieworder", async (req, res) => {
-//   let userId=req.params.userId;
-//   let orders = await userHelper.getUserOrders(userId);
-//   res.render("user/orders", {layout:"layout-admin",orders});
-// });
+router.get("/generate-coupon", (req, res, next) => {
+  res.render("admin/generate-coupon", { layout: "layout-admin" });
+});
 
+router.post("/generate-coupon", (req, res, next) => {
+  adminHelper.generateCoupon(req.body).then((response) => {
+    res.redirect("/admin/view-coupon");
+  });
+});
 
-router.get('/*',(req,res)=>{
-  res.render("admin/error")
-})
+router.get("/delete-coupon/:id", (req, res, next) => {
+  let couponId = req.params.id;
+  adminHelper.deleteCoupon(couponId).then((response) => {
+    res.redirect("/admin/view-coupon");
+  });
+});
 
+router.get("/status-shipped", (req, res, next) => {
+  let orderId = req.query.id;
+  console.log("====================================");
+  console.log(orderId);
+  console.log("====================================");
 
+  let userId = req.query.userId;
+  let status = "shipped";
+  adminHelper.changeStatus(orderId, status).then((response) => {
+    res.redirect("/admin/view-order/" + userId);
+  });
+});
 
-router.get('/status-shipped',(req,res,next)=>{
-  let orderId=req.query.id
-console.log('====================================');
-console.log(orderId);
-console.log('====================================');
+router.get("/status-delivered", (req, res, next) => {
+  let orderId = req.query.id;
+  let userId = req.query.userId;
+  let status = "delivered";
+  adminHelper.changeStatus(orderId, status).then((response) => {
+    res.redirect("/admin/view-order/" + userId);
+  });
+});
 
-  let userId=req.query.userId
-  let status='shipped'
-  adminHelper.changeStatus(orderId,status).then((response)=>{
-    res.redirect('/admin/view-order/'+userId)
-  })
-})
+router.get("/status-cancelled", (req, res, next) => {
+  let orderId = req.query.id;
+  let userId = req.query.userId;
+  userHelper.cancelOrder(orderId).then(() => {
+    res.redirect("/admin/view-order/" + userId);
+  });
+});
 
-router.get('/status-delivered',(req,res,next)=>{
-  let orderId=req.query.id
-  let userId=req.query.userId
-  let status='delivered'
-  adminHelper.changeStatus(orderId,status).then((response)=>{
-    res.redirect('/admin/view-order/'+userId)
-  })
-})
+router.get("/view-banner", (req, res) => {
+  bannerHelper.getAllBanner().then((banner) => {
+    console.log(banner);
+    res.render("admin/view-banner", { layout: "layout-admin", banner });
+  });
+});
+//add banner
+router.get("/add-banner", (req, res) => {
+  res.render("admin/add-banner", { layout: "layout-admin" });
+});
+router.post("/add-banner", async (req, res) => {
+  console.log(req.body);
+  console.log(req.files);
+  const id = uniqid();
+  console.log("uniqid check", id);
+  req.body.image = id + ".jpg";
+  await bannerHelper.addBanner(req.body);
+  let image = req.files.image;
+  image.mv("./public/product-images/" + id + ".jpg", (err, done) => {
+    if (!err) {
+      res.render("admin/add-banner");
+    } else {
+      console.log(err);
+    }
+  });
+  res.redirect("/admin/view-banner");
+});
 
-router.get('/status-cancelled',(req,res,next)=>{
-  let orderId=req.query.id
-  let userId=req.query.userId
-  userHelper.cancelOrder(orderId).then(()=>{
-    res.redirect('/admin/view-order/'+userId)
-  })
-})
+router.get("/delete-banner/:id", (req, res) => {
+  let banId = req.params.id;
+  bannerHelper.deletebanner(banId).then((response) => {
+    res.redirect("/admin/view-banner");
+  });
+});
 
-
-// router.get('/status-shipped',(req,res,next)=>{
-//   let orderId = req.query.id
-//   console.log(orderId);
-//   console.log("asdfghjk");
-// })
-
-
-
+router.get("/*", (req, res) => {
+  res.render("admin/error");
+});
 
 module.exports = router;

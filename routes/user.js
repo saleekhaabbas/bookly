@@ -7,7 +7,8 @@ const twilio = require("twilio");
 const twilioHelpers = require("../helpers/twilio-helper");
 const twilioHelper = require("../helpers/twilio-helper");
 const productHelper = require("../helpers/product-helper");
-const moment=require("moment")
+const moment=require("moment");
+const bannerHelper = require("../helpers/banner-helper");
 let userData;
 const verifyLogin = (req, res, next) => {
   if (req.session.userloggedIn) {
@@ -27,6 +28,7 @@ router.get("/", async function (req, res, next) {
   if(req.session.user){
     wishCount=await userHelper.getWishCount(req.session.user._id);
   }
+  bannerHelper.getAllBanner().then((banner)=>{
   categoryHelpers.getAllCategory().then((category) => {
     res.render("user/user-page", {
       layout: "layout",
@@ -34,9 +36,11 @@ router.get("/", async function (req, res, next) {
       userData,
       category,
       cartCount,
-      wishCount
+      wishCount,
+      banner
     });
   });
+})
 });
 
 router.get("/login", (req, res) => {
@@ -209,7 +213,8 @@ router.get("/cart", verifyLogin, async (req, res) => {
 
 router.get("/add-to-cart/:id", (req, res) => {
   userHelper.addToCart(req.params.id, req.session.user._id).then(() => {
-    res.json({ status: true });
+    // res.json({ status: true });
+    res.redirect('/view-product')
   });
 });
 
@@ -259,7 +264,7 @@ router.get("/order-success", (req, res) => {
 });
 
 router.get("/orders", async (req, res) => {
-  
+  let userData = req.session.user;
   let orders = await userHelper.getUserOrders(req.session.user._id);
   let cartCount = null;
   if (req.session.user) {
@@ -269,14 +274,20 @@ router.get("/orders", async (req, res) => {
     element.date = moment(element.date).format("DD-MM-YY")
 
 });
-  res.render("user/orders", { user: req.session.user, orders,cartCount });
+  res.render("user/orders", { user: req.session.user, orders,cartCount,userData });
 });
 
 router.get("/view-order-products/:id", async (req, res) => {
   let products = await userHelper.getOrderProducts(req.params.id);
+  let orderBill=await userHelper.getUserOrderBill(req.params.id)
+  console.log('====================================');
+  console.log(req.params.id);
+  console.log(orderBill);
+  console.log('====================================');
   res.render("user/view-order-products", {
     user: req.session.user,
     products,
+    orderBill,
     user: true,
   });
 });
@@ -302,7 +313,7 @@ router.post("/verify-payment", (req, res) => {
 
 //wishlist
 router.get("/wishlist",async(req,res)=>{
-  
+  let userData = req.session.user;
   let products = await userHelper.getWishProducts(req.session.user._id);
   let wishCount=null;
   if(req.session.user){
@@ -312,7 +323,7 @@ router.get("/wishlist",async(req,res)=>{
   if (req.session.user) {
     cartCount = await userHelper.getCartCount(req.session.user._id);
   }
-  res.render('user/wishlist',{products,user:true,wishCount,cartCount})
+  res.render('user/wishlist',{products,user:true,wishCount,cartCount,userData})
 })
 
 
@@ -330,6 +341,17 @@ router.get("/deleteWishProduct/:id/:pId",(req, res)=> {
     res.redirect("/wishlist");
   });
 });
+
+router.post('/check-coupon',async(req,res,next)=>{
+  let userId = req.session.user._id
+  let couponCode = req.body.coupon
+  let totalAmount = await userHelper.getTotalAmount(userId)
+  userHelper.checkCoupon(couponCode, totalAmount).then((response) => {
+      res.json(response)
+  }).catch((response) => {
+      res.json(response)
+  })
+})
 
 
 //logout

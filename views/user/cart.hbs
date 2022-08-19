@@ -1,15 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="public/stylesheets/cart.css">
-</head>
-<body class="c-body">
+ <link rel="stylesheet" href="/public/stylesheets/cart.css">
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"></script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
 
-<div class="card" style="margin-top:30px">
+  {{#if products}}
+        <div class="card" style="margin-top:30px">
+          
             <div class="row">
                 <div class="col-md-8 cart">
                     
@@ -52,33 +49,29 @@
                         <div class="col" style="padding-left:0;">{{cartCount}} Items</div>
                         {{!-- <div class="col text-right" id="{{this.product._id}}2">{{this.productTotal}}</div> --}}
                     </div>
-                    <form>
-                        <p>SHIPPING</p>
-                        <select><option class="text-muted">Standard-Delivery- &euro;5.00</option></select>
-                        <p>GIVE CODE</p>
-                        <input id="code" placeholder="Enter your code">
-                    </form>
+                   
                     <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
                         <div class="col">TOTAL PRICE</div>
                         <div class="col text-right" id="total">{{total}}</div>
                     </div>
                     <a href="/place-order" class="btn btn-dark">PLACE ORDER</a>
+                    
                 </div>
             </div>
-            
-        </div>
-        {{!-- {{else}}
-        <section>
-            <div>
-                <p>No items in cart</p>
-                <img src="https://ibellstore.com/images/no-item-found-here.png" alt="">
+            {{else}}
+            <div class="container" >
+
+            <div class="col-sm-12 empty-cart-cls text-center mb-5 " style="margin-top:200px ;">
+                <img src="https://cdn-icons-png.flaticon.com/512/678/678451.png" width="130" height="130" class="img-fluid mb-5 mr-3">
+                <h3 class="mb-5"><strong>Your Cart is Empty</strong></h3>
+                <button type="button" class="btn btn-outline-secondary">
+                <a href="/shop" class="primary-btn mt-5 mb-5">Shop now </a>
+                </button>
+                 
             </div>
-        </section>
-        {{/if}} --}}
-         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"></script>
-     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
+          
+        </div>
+          {{/if}}
       <script>
         function changeQuantity(cartId,proId,userId,count){
             let price=parseInt(document.getElementById(proId+1).innerHTML)
@@ -109,9 +102,7 @@
         }
       </script>
 
-        </body>
-</html>
-
+     
 
 
 

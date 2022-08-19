@@ -93,17 +93,94 @@ module.exports = {
         });
     });
   },
-  changeStatus:(orderId,status)=>{
-    return new Promise((resolve,reject)=>{
-      db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:objectId(orderId)},
-      {
-        $set:{
-          status:status
-        }
-      }
-      ).then((response)=>{
-        resolve(response)
-      })
-    })
-  }
+  changeStatus: (orderId, status) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.ORDER_COLLECTION)
+        .updateOne(
+          { _id: objectId(orderId) },
+          {
+            $set: {
+              status: status,
+            },
+          }
+        )
+        .then((response) => {
+          resolve(response);
+        });
+    });
+  },
+  // getCoupons: () => {
+  //   return new Promise(async (resolve, reject) => {
+  //     let coupons = await db
+  //       .get()
+  //       .collection(collection.COUPON_COLLECTION)
+  //       .find();
+  //     // .toArray();
+  //     console.log({ coupons });
+  //     // resolve(coupons);
+  //   });
+  // },
+
+  getCoupons: () => {
+    return new Promise(async (resolve, reject) => {
+      const response = await db
+        .get()
+        .collection(collection.COUPON_COLLECTION)
+        .find()
+        .toArray();
+      console.log("coupons", response);
+      resolve(response);
+    });
+  },
+  generateCoupon: (couponData) => {
+    console.log({ couponData });
+    const oneDay = 1000 * 60 * 60 * 24;
+    let couponObj = {
+      Name: couponData.name.toUpperCase(),
+      Offer: parseFloat(couponData.offer / 100),
+      validity: new Date(
+        new Date().getTime() + (oneDay + parseInt(couponData.validity))
+      ),
+    };
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.COUPON_COLLECTION)
+        .find()
+        .toArray()
+        .then((result) => {
+          if (result[0] == null) {
+            db.get()
+              .collection(collection.COUPON_COLLECTION)
+              .createIndex({ Name: 1 }, { unique: true });
+            db.get()
+              .collection(collection.COUPON_COLLECTION)
+              .createIndex({ validity: 1 }, { expireAfterSeconds: 0 });
+            db.get()
+              .collection(collection.COUPON_COLLECTION)
+              .insertOne(couponObj)
+              .then((response) => {
+                resolve(response);
+              });
+          } else {
+            db.get()
+              .collection(collection.COUPON_COLLECTION)
+              .insertOne(couponObj)
+              .then((respnse) => {
+                resolve(response);
+              });
+          }
+        });
+    });
+  },
+  deleteCoupon: (couponId) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.COUPON_COLLECTION)
+        .deleteOne({ _id: objectId(couponId) })
+        .then((response) => {
+          resolve();
+        });
+    });
+  },
 };

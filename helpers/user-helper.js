@@ -6,7 +6,7 @@ const { PRODUCT_COLLECTION } = require("../config/collection");
 const objectId = require("mongodb").ObjectId;
 const Razorpay = require("razorpay");
 const { resolve } = require("path");
-const { v4 : uuidv4 } = require('uuid')
+const { v4: uuidv4 } = require("uuid");
 var instance = new Razorpay({
   key_id: "rzp_test_iK644BVab4Z1Yg",
   key_secret: "ebFwPdYVMLwS1R7kdaCkEBwv",
@@ -30,7 +30,7 @@ module.exports = {
           email: userData.email,
           mobile: userData.number,
           password: userData.password,
-          blockUsers:false
+          blockUsers: false,
         };
         db.get()
           .collection(collection.USER_COLLECTION)
@@ -460,12 +460,12 @@ module.exports = {
           {
             $set: {
               "deliveryDetails.action": false,
-              status:'cancelled'
+              status: "cancelled",
             },
           }
         )
         .then((response) => {
-          resolve();  
+          resolve();
         });
     });
   },
@@ -575,12 +575,12 @@ module.exports = {
       resolve(count);
     });
   },
-  deleteWishProduct: (wId,proId) => {
+  deleteWishProduct: (wId, proId) => {
     return new Promise((resolve, reject) => {
       db.get()
         .collection(collection.WISHLIST_COLLECTION)
         .updateOne(
-          { _id: objectId(wId), },
+          { _id: objectId(wId) },
           {
             $pull: {
               products: { item: objectId(proId) },
@@ -593,65 +593,122 @@ module.exports = {
     });
   },
   addNewAddress: (address, userId) => {
-
     let addressData = {
-
-        addressId: uuidv4(),
-        First_Name: address.First_Name,
-        Last_Name: address.Last_Name,
-        Company_Name: address.Company_Name,
-        Street_Address: address.Street_Address,
-        Extra_Details: address.Extra_Details,
-        Town_City: address.Town_City,
-        Country_State: address.Country_State,
-        Post_Code: address.Post_Code,
-        Phone: address.Phone,
-        Alt_Phone: address.Alt_Phone
-
-    }
+      addressId: uuidv4(),
+      First_Name: address.First_Name,
+      Last_Name: address.Last_Name,
+      Company_Name: address.Company_Name,
+      Street_Address: address.Street_Address,
+      Extra_Details: address.Extra_Details,
+      Town_City: address.Town_City,
+      Country_State: address.Country_State,
+      Post_Code: address.Post_Code,
+      Phone: address.Phone,
+      Alt_Phone: address.Alt_Phone,
+    };
 
     console.log(addressData);
 
-    return new Promise(async(resolve, reject) => {
-        let getAddress = await db.get().collection(collection.ADDRESS_COLLECTION).findOne({ user: objectId(userId) })
-        console.log(getAddress);
-        if (getAddress) {
-            db.get().collection(collection.ADDRESS_COLLECTION).updateOne({ user: objectId(userId) },
-                {
-                    $push: {
-                        address: addressData
-                    }
-                }).then((response) => {
-                    resolve(response)
-                })
-
-        } else {
-            let addressObj = {
-                user: objectId(userId),
-                address: [addressData]
+    return new Promise(async (resolve, reject) => {
+      let getAddress = await db
+        .get()
+        .collection(collection.ADDRESS_COLLECTION)
+        .findOne({ user: objectId(userId) });
+      console.log(getAddress);
+      if (getAddress) {
+        db.get()
+          .collection(collection.ADDRESS_COLLECTION)
+          .updateOne(
+            { user: objectId(userId) },
+            {
+              $push: {
+                address: addressData,
+              },
             }
+          )
+          .then((response) => {
+            resolve(response);
+          });
+      } else {
+        let addressObj = {
+          user: objectId(userId),
+          address: [addressData],
+        };
 
-            db.get().collection(collection.ADDRESS_COLLECTION).insertOne(addressObj).then((response) => {
-                resolve(response)
-            })
-        }
-    })
-},
-getSavedAddress:(userId)=>{
-  return new Promise((resolve,reject)=>{
-   db.get().collection(collection.ADDRESS_COLLECTION).findOne({user: objectId(userId)}).then((savedAddress)=>{
-      if(savedAddress){
-          let addressArray=savedAddress.address
-          if(addressArray.length > 0){
-              resolve(savedAddress)
-          }else{
-              resolve(false)
+        db.get()
+          .collection(collection.ADDRESS_COLLECTION)
+          .insertOne(addressObj)
+          .then((response) => {
+            resolve(response);
+          });
+      }
+    });
+  },
+  getSavedAddress: (userId) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.ADDRESS_COLLECTION)
+        .findOne({ user: objectId(userId) })
+        .then((savedAddress) => {
+          if (savedAddress) {
+            let addressArray = savedAddress.address;
+            if (addressArray.length > 0) {
+              resolve(savedAddress);
+            } else {
+              resolve(false);
+            }
+          } else {
+            resolve(false);
           }
-       }else{
-          resolve(false)
-       }
-   })
-  
-  })
-},
+        });
+    });
+  },
+  checkCoupon: (code, amount) => {
+    const coupon = code.toString().toUpperCase();
+
+    console.log(coupon);
+
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.COUPON_COLLECTION)
+        .findOne({ Name: coupon })
+        .then((response) => {
+          console.log(response);
+          console.log("from db");
+          if (response == null) {
+            // let response = {status : false}
+            console.log(response + "          null resp");
+            reject({ status: false });
+          } else {
+            let offerPrice = parseFloat(amount * response.Offer);
+            // let discountPrice = amount - offerPrice
+            let newTotal = parseInt(amount - offerPrice);
+            // response = {
+            //     amount: newTotal,
+            //     discount: discountPrice
+            // }
+            console.log("          Nonnull resp");
+            resolve(
+              (response = {
+                couponCode: coupon,
+                status: true,
+                amount: newTotal,
+                discount: offerPrice,
+              })
+            );
+          }
+        });
+    });
+  },
+  getUserOrderBill: (orderId) => {
+    return new Promise(async (resolve, reject) => {
+      let orderBill = await db
+        .get()
+        .collection(collection.ORDER_COLLECTION)
+        .find({ _id: objectId(orderId) })
+        .toArray();
+
+      resolve(orderBill);
+    });
+  },
 };

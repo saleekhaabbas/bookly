@@ -1,34 +1,65 @@
-<div class="container mt-5 mb-5">
-  <div class="row g-2">
 
-    {{#each products}}
 
-      <div class="col-md-3 mt-3 d-flex justify-content-center">
-        <div class="card p-2">
-
-          <div class="text-center">
-            <img
-              src="../../public/product-images/{{this.product.image}}"
-              class="img-fluid"
-              width="100"
-            />
-            <div class="content">
-                <div class="d-flex justify-content-between align-items-center">
-              <span class="category">{{this.product.product}}</span>
-              
-            </div>
-            <span class="price">Rs.{{this.product.price}}</span>
-              <h6>Quantity{{this.quantity}}</h6>
-            </div>
-            
-            
-    
-          </div>
-         
-        </div>
-      </div>
-    {{/each}}
-  </div>
-</div>
 
 <link rel="stylesheet" type="text/css" href="/public/stylesheets/pro.css">
+<section class="section-products">
+		<div class="container">
+				<div class="row justify-content-center text-center">
+						
+				</div>
+				<div class="row">
+						<!-- Single Product -->
+            {{#each products}}
+						<div class="col-md-6 col-lg-4 col-xl-3">
+								<div id="product-1" class="single-product">
+                 
+										<div class="part-1">
+                       <img
+              src="../../public/product-images/{{this.product.image}}"
+              class="img-fluid"
+              width="100%"
+            height="100"
+            />
+												
+										</div>
+										<div class="part-2">
+												<h3 class="product-title"><b>{{this.product.product}}</b></h3>
+												<h4 class="product-price">Rs.{{this.product.price}}</h4><br>
+                        <h4>Quantity-{{this.quantity}}</h4><br>
+                       
+										</div>
+								</div>
+						</div>
+            {{/each}}
+						<!-- Single Product -->
+						
+				</div>
+        <div class="row">
+        {{#each orderBill}}
+    
+        
+            <div class="container " style="margin-left:149px; margin-top:200px" >
+                <dt>Shipping Details</dt>
+                <div class="col-md-3" style="border:solid hsl(0, 0%, 0%); }">
+                    <dl class="text-left">
+                        <dd>Name:{{this.deliveryDetails.First_Name}}</dd>
+                        <dd>Mobile:{{this.deliveryDetails.Phone}}</dd>
+                        <dd>Address:{{this.deliveryDetails.Town_City}}</dd>
+                        <dd>Pincode:{{this.deliveryDetails.Post_Code}}</dd>
+
+                        <dd>Payment Method:{{this.PaymentMethod}}</dd>
+                        <dd>Total Bill:₹{{this.totalAmount}}</dd>
+                        <dd>Order Status:{{this.status}}</dd>
+                        <dd>Order Date:{{this.date}}</dd>
+              
+
+                    </dl>
+                    
+                </div>
+                
+            </div>
+            {{/each}}
+    </div>
+    </div>
+		</div>
+</section>
