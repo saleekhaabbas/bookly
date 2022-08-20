@@ -20,7 +20,6 @@ const verifyLogin = (req, res, next) => {
 router.get("/", function (req, res, next) {
   const adminData = req.session.adminloggedIn;
   if (adminData) {
-    
     res.render("admin/admin-page", { layout: "layout-admin" });
   } else {
     res.redirect("/admin/login");
@@ -336,6 +335,11 @@ router.get("/delete-banner/:id", (req, res) => {
 
 router.get("/*", (req, res) => {
   res.render("admin/error");
+});
+
+router.get("/testone", (req, res) => {
+  console.log("test one");
+  // res.render("admin/error");
 });
 
 module.exports = router;
