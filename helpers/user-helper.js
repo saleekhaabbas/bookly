@@ -191,12 +191,9 @@ module.exports = {
           },
         ])
         .toArray();
-      console.log(cartItems[0].products);
-      if (cartItems.length == 0) {
+    
         resolve(cartItems);
-      } else {
-        resolve(cartItems);
-      }
+    
     });
   },
   getCartCount: (userId) => {
@@ -212,7 +209,7 @@ module.exports = {
       resolve(count);
     });
   },
-  deleteCartProduct: (cartId, proId, userId) => {
+  deleteCartProduct: (cartId, proId) => {
     return new Promise((resolve, reject) => {
       db.get()
         .collection(collection.CART_COLLECTION)
@@ -220,7 +217,7 @@ module.exports = {
           { _id: objectId(cartId) },
           {
             $pull: {
-              product: { item: objectId(proId) },
+              products: { item: objectId(proId) },
             },
           }
         )
@@ -312,7 +309,13 @@ module.exports = {
       }
     });
   },
-  placeOrder: (order, products, total) => {
+  placeOrder: (order, products, total,discountData) => {
+    let orderData = {
+      Total_Amount: total,
+      discountData: discountData
+
+  }
+  let invoice = parseInt(Math.random() * 9999)
     return new Promise((resolve, reject) => {
       let status = order["Payment_Method"] === "COD" ? "placed" : "pending";
       let orderObj = {
@@ -325,6 +328,7 @@ module.exports = {
         userId: objectId(order.userId),
         paymentMethod: order["Payment_Method"],
         products: products,
+        orderData:orderData,
         totalAmount: parseInt(total),
         status: status,
         date: new Date(),

@@ -176,8 +176,7 @@ router.get("/view-product", verifyLogin, async function (req, res) {
 //user profile
 router.get("/profile/:id", async (req, res) => {
   const userData = await userHelper.getUserDetails(req.params.id);
-  console.log("user profile", req.params.id, userData);
-  res.render("user/profile", { userData, user: true });
+  res.render("user/profile", { userData,user:true });
 });
 // router.get("/profile/:id", async (req, res) => {
 //   let userData = await userHelper.getUserDetails(req.params.id);
@@ -219,11 +218,12 @@ router.get("/add-to-cart/:id", (req, res) => {
 });
 
 router.get("/deleteCartProduct/:id/:ik", function (req, res) {
+  console.log('cart');
   let cartId = req.params.id;
   let proId = req.params.ik;
   let userId = req.session.user._id;
   userHelper.deleteCartProduct(cartId, proId, userId).then((response) => {
-    res.render("/cart");
+    res.redirect("/cart");
   });
 });
 router.post("/change-product-quantity", (req, res, next) => {
@@ -236,23 +236,35 @@ router.post("/change-product-quantity", (req, res, next) => {
 //place order
 
 router.get("/place-order", verifyLogin, async (req, res) => {
+  let user = req.session.user;
   const userData = await userHelper.getUserDetails(req.params.id);
   let total = await userHelper.getTotalAmount(req.session.user._id);
   let savedAddress= await userHelper.getSavedAddress(req.session.user._id);
-  res.render("user/place-order", { total, user: req.session.user,userData,savedAddress });
+  res.render("user/place-order", { total, user: req.session.user,userData,savedAddress,user:true ,user});
 });
 
 router.post("/place-order", async (req, res) => {
   if(req.body.saveAddress=='on'){
     await userHelper.addNewAddress(req.body,req.session.user._id)
   }
+ 
   let products = await userHelper.getCartProductList(req.body.userId);
   let totalPrice = await userHelper.getTotalAmount(req.body.userId);
-  userHelper.placeOrder(req.body, products, totalPrice).then((orderId) => {
+  let discountData = null;
+  if (req.body.Coupon_Code) {
+    await userHelper
+      .checkCoupon(req.body.Coupon_Code, totalPrice)
+      .then((response) => {
+        discountData = response;
+      })
+      .catch(() => (discountData = null));
+  }
+  userHelper.placeOrder(req.body, products, totalPrice,discountData).then((orderId) => {
     if (req.body["Payment_Method"] == "COD") {
       res.json({ codSuccess: true });
     } else {
-      userHelper.generateRazorpay(orderId, totalPrice).then((response) => {
+      let netAmount = discountData ? discountData.amount : totalPrice;
+      userHelper.generateRazorpay(orderId, netAmount).then((response) => {
         res.json(response);
       });
     }
@@ -263,7 +275,7 @@ router.get("/order-success", (req, res) => {
   res.render("user/order-success", { user: req.session.user });
 });
 
-router.get("/orders", async (req, res) => {
+router.get("/orders",verifyLogin, async (req, res) => {
   let userData = req.session.user;
   let orders = await userHelper.getUserOrders(req.session.user._id);
   let cartCount = null;
@@ -274,6 +286,8 @@ router.get("/orders", async (req, res) => {
     element.date = moment(element.date).format("DD-MM-YY")
 
 });
+console.log("---------");
+console.log(orders);
   res.render("user/orders", { user: req.session.user, orders,cartCount,userData });
 });
 

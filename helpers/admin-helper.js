@@ -110,17 +110,7 @@ module.exports = {
         });
     });
   },
-  // getCoupons: () => {
-  //   return new Promise(async (resolve, reject) => {
-  //     let coupons = await db
-  //       .get()
-  //       .collection(collection.COUPON_COLLECTION)
-  //       .find();
-  //     // .toArray();
-  //     console.log({ coupons });
-  //     // resolve(coupons);
-  //   });
-  // },
+  
 
   getCoupons: () => {
     return new Promise(async (resolve, reject) => {
@@ -182,5 +172,131 @@ module.exports = {
           resolve();
         });
     });
+  },
+  onlinePaymentCount: () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let count = await db.get().collection(collection.ORDER_COLLECTION).find({ paymentMethod
+          : "Razorpay" }).count()
+        resolve(count)
+        console.log(count)
+      } catch (err) {
+        reject(err)
+      }
+
+    })
+  },
+  totalUsers: () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let count = await db.get().collection(collection.USER_COLLECTION).find().count()
+        resolve(count)
+        console.log(" total user count")
+        console.log(count)
+      } catch (err) {
+        reject(err)
+      }
+    })
+  },
+  totalOrder: () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let count = await db.get().collection(collection.ORDER_COLLECTION).find().count()
+        resolve(count)
+        console.log("total order");
+        console.log(count);
+      } catch (err) {
+        reject(err)
+      }
+    })
+  },
+  cancelOrder: () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let count = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+          {
+            $match: {
+              status: "pending"
+            }
+          },
+
+        {
+            $count: 'number'
+          }
+
+        ]).toArray()
+        resolve(count)
+        console.log('cancel count')
+        console.log(count);
+      } catch (err) {
+        reject(err)
+      }
+
+    })
+  },
+  totalCOD: () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let count = await db.get().collection(collection.ORDER_COLLECTION).find({ paymentMethod: "COD", }).count()
+        resolve(count)
+        console.log("cod");
+        console.log(count);
+      } catch (err) {
+        reject(err)
+      }
+    })
+  },
+  totalDeliveryStatus: (data) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let statusCount = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+          {
+            $match: {
+              status: data
+            }
+          },
+
+          {
+            $count: 'number'
+          }
+
+        ]).toArray()
+        resolve(statusCount)
+
+        console.log("status count");
+        console.log(statusCount);
+      } catch (err) {
+        reject(err)
+      }
+    })
+  },
+  
+  totalCost: () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+     let total= await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+        
+
+          {
+            $project: {
+              'orderData.Total_Amount': 1
+            }
+          },
+          {
+            $group: {
+              _id: null,
+              sum: { $sum: '$orderData.Total_Amount' }
+            }
+          }
+        ]).toArray()
+        resolve(total)
+        console.log("total amnt");
+        console.log(total);
+        console.log('hhhhhhhhhhhhhhhh');
+      
+      } catch (err) {
+        reject(err)
+      }
+    })
   },
 };

@@ -56,25 +56,6 @@
 
 
 
-                            {{!-- {{#each address.Address}}
-                            <div class="col-md-3">
-                                <dl class='text-left'>
-                                    <dt style="margin-bottom:10px;color:black">{{this.First_Name}} {{this.Last_Name}}
-                                    </dt>
-                                    <dd>"{{this.Company_Name}}"</dd>
-                                    <dd>{{this.Street_Address}}, {{this.Extra_Details}},</dd>
-                                    <dd>{{this.Town_City}}, {{this.Country_State}},</dd>
-                                    <dd>PIN: {{this.Post_Code}},</dd>
-                                    <dd>Ph: {{this.Phone}},</dd>
-                                    <dd>Alt-Ph: {{this.Alt_Phone}}</dd>
-                                    <dt><input name="choice"
-                                            onclick="addressSelect('{{this.First_Name}}','{{this.Last_Name}}','{{this.Company_Name}}','{{this.Street_Address}}','{{this.Extra_Details}}','{{this.Town_City}}','{{this.Country_State}}','{{this.Post_Code}}','{{this.Phone}}','{{this.Alt_Phone}}')"
-                                            type="radio" id="useaddress"><span style="color: #007eff;">
-                                            Use Address</span></dt><br>
-
-                                </dl>
-                            </div>
-                            {{/each}} --}}
 
                         </div>
 
@@ -165,7 +146,7 @@
                                     <span id="couponValid"></span>
                                 </div>
 
-                                <button onclick="couponCheck()" class="checkout-page-button hvr-bs">Apply</button>
+                                <a onclick="couponCheck()" class="checkout-page-button hvr-bs btn btn-danger">Apply</a>
 
                             </div>
 

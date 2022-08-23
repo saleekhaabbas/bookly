@@ -4,7 +4,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
 
-
+{{#if products}}
 	<div class="cart-wrap">
 		<div class="container">
 	        <div class="row">
@@ -51,6 +51,20 @@
 			</div>
 		</div>
 	</div>
+	{{else}}
+	            <div class="container" >
+
+            <div class="col-sm-12 empty-cart-cls text-center mb-5 " style="margin-top:200px ;">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9OJEpysAfa0na-YrgIZcCPUUo3QJZPOMz1KS4zv7c&s" width="170" height="170" class="img-fluid mb-5 mr-3">
+                <h3 class="mb-5"><strong>Your Wishlist is Empty</strong></h3>
+                <button type="button" class="btn btn-outline-secondary">
+                <a href="/view-product" class="primary-btn mt-5 mb-5">Add now </a>
+                </button>
+                 
+            </div>
+          
+        </div>
+          {{/if}}
 
 	<script src="/public/javascripts/script.js"></script>
 	

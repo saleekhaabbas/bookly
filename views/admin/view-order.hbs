@@ -16,33 +16,38 @@
       </thead>
       <tbody>
         {{#each userOrders}}
-        <tr>
-          <th scope="row">{{inc @index}}</th>
-          <td scope="row">{{this.date}}</td>
-          <td scope="row">{{this.deliveryDetails.address}}</td>
-          <td scope="row">{{this.deliveryDetails.pincode}}</td>
-          <td scope="row">{{this.deliveryDetails.mobile}}</td>
-          <td scope="row">{{this.totalAmount}}</td>
-          <td scope="row">{{this.paymentMethod}}</td>
-          <td scope="row">{{this.status}}</td>
-          <td>
-{{#if  deliveryDetails.action}}
+          <tr>
+            <th scope="row">{{inc @index}}</th>
+            <td scope="row">{{this.date}}</td>
+            <td scope="row">{{this.deliveryDetails.address}}</td>
+            <td scope="row">{{this.deliveryDetails.pincode}}</td>
+            <td scope="row">{{this.deliveryDetails.mobile}}</td>
+            <td scope="row">{{this.totalAmount}}</td>
+            <td scope="row">{{this.paymentMethod}}</td>
+            <td scope="row">{{this.status}}</td>
+            <td>
+              {{#if deliveryDetails.action}}
 
-            <select class="" name="forma" onchange="location = this.value;">
-                              <option>Change Status</option>
-                            <option value="/admin/status-shipped?id={{this._id}}&userId={{this.userId}}">shipped</option>
-                            <option value="/admin/status-delivered?id={{this._id}}&userId={{this.userId}}">delivered</option>
-                            <option value="/admin/status-cancelled?id={{this._id}}&userId={{this.userId}}">cancel</option>
+                <select class="" name="forma" onchange="location = this.value;">
+                  <option>Change Status</option>
+                  <option
+                    value="/admin/status-shipped?id={{this._id}}&userId={{this.userId}}"
+                  >shipped</option>
+                  <option
+                    value="/admin/status-delivered?id={{this._id}}&userId={{this.userId}}"
+                  >delivered</option>
+                  <option
+                    value="/admin/status-cancelled?id={{this._id}}&userId={{this.userId}}"
+                  >cancel</option>
 
-                            
-                        </select>
-                        {{else}}
-    
-    <p>cancelled</p>
+                </select>
+              {{else}}
 
-                        {{/if}}
-          </td>
-        </tr>
+                <p>cancelled</p>
+
+              {{/if}}
+            </td>
+          </tr>
         {{/each}}
       </tbody>
     </table>

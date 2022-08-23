@@ -17,10 +17,57 @@ const verifyLogin = (req, res, next) => {
 };
 /* GET users listing. */
 //admin login
-router.get("/", function (req, res, next) {
+router.get("/",async function (req, res, next) {
   const adminData = req.session.adminloggedIn;
   if (adminData) {
-    res.render("admin/admin-page", { layout: "layout-admin" });
+    try {
+          
+            
+      let delivery = {}
+      delivery.pending = 'pending'
+      delivery.Placed = 'placed'
+      delivery.Shipped = 'shipped'
+     
+      delivery.Deliverd = 'delivered'
+      delivery.Cancelled = 'cancelled'
+      const allData = await Promise.all
+        ([
+          adminHelper.onlinePaymentCount(),
+          adminHelper.totalUsers(), 
+          adminHelper.totalOrder(),
+          adminHelper.cancelOrder(),
+          adminHelper.totalCOD(),
+          adminHelper.totalDeliveryStatus(delivery.pending),
+          adminHelper.totalDeliveryStatus(delivery.Placed),
+          adminHelper.totalDeliveryStatus(delivery.Shipped),
+         
+          adminHelper.totalDeliveryStatus(delivery.Deliverd),
+          adminHelper.totalDeliveryStatus(delivery.Cancelled),
+          adminHelper.totalCost(),
+        ]);
+      res.render('admin/admin-page', {
+        layout: "layout-admin" ,
+
+        OnlinePymentcount: allData[0],
+        totalUser: allData[1],
+        totalOrder: allData[2],
+        cancelOrder: allData[3],
+        totalCod: allData[4],
+        pending: allData[5],
+        Placed: allData[6],
+        Shipped: allData[7],
+        
+        Deliverd: allData[8],
+        Cancelled: allData[9],
+        totalCost: allData[10],
+      })
+     
+   
+  } catch (err) {
+    next(err)
+  }
+    
+    // res.render("admin/admin-page", { layout: "layout-admin" });
   } else {
     res.redirect("/admin/login");
   }
@@ -85,11 +132,7 @@ router.post("/add-category", async (req, res) => {
   res.redirect("/admin/view-category");
 });
 
-// router.post("/add-category", async (req, res) => {
-//   console.log("cat check", req.body);
-//   await categoryHelpers.addCategory(req.body);
-//   res.redirect("/admin/view-category");
-// });
+
 //delete category
 router.get("/delete-category/:id", (req, res) => {
   let catId = req.params.id;
@@ -335,11 +378,6 @@ router.get("/delete-banner/:id", (req, res) => {
 
 router.get("/*", (req, res) => {
   res.render("admin/error");
-});
-
-router.get("/testone", (req, res) => {
-  console.log("test one");
-  // res.render("admin/error");
 });
 
 module.exports = router;

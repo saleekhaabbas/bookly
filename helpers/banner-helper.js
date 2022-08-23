@@ -46,9 +46,9 @@ module.exports = {
           { _id: objectId(banId) },
           {
             $set: {
-              banner:banDetails.banner,
+              name:banDetails.name,
               heading:banDetails.heading,
-              discription:banDetails.discription,
+              definition:banDetails.definition,
               image:banDetails.image,
             },
           }
