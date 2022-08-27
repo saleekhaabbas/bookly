@@ -1,40 +1,46 @@
 <div class="main-content">
-<section>
-  <div class="container padding-left:10px mt-5">
-    <div class="col-md-6">
+  <section>
+    <div class="container padding-left:10px mt-5">
+      <div class="col-md-6">
         <h2 class="text-center">Edit Category</h2>
-      <form action="/admin/edit-category/{{category._id}}" method="post" id="userLogin" enctype="multipart/form-data">
-        <div class="form-outline mb-4">
-          <input
-            name="category"
-            type="text"
-            class="form-control"
-            placeholder="Enter Category Name"
-            value="{{category.category}}"
-          />
-        </div>
-        <div class="form-outline mb-4">
-          <input
-            name="description"
-            type="text"
-            class="form-control"
-            placeholder="Type description"
-            value="{{category.description}}"
-          />
-        </div>
-                <div class="form-outline mb-4">
-          <input
-            name="image"
-            type="file"
-            class="form-control"
-            placeholder="Chose product image"
-          />
-        </div>
-    {{!-- <a href="/admin/edit-category/{{this._id}}"> <button type="submit" class="btn btn-primary">Submit</button></a> --}}
-     <button type="submit" class="btn btn-primary">Submit</button>
-       
-      </form> 
+        <form
+          action="/admin/edit-category/{{category._id}}"
+          method="post"
+          id="userLogin"
+          enctype="multipart/form-data"
+        >
+          <div class="form-outline mb-4">
+            <input
+              name="category"
+              type="text"
+              class="form-control"
+              placeholder="Enter Category Name"
+              value="{{category.category}}"
+              oninput="this.value=this.value.toLocaleUpperCase()"
+            />
+          </div>
+          <div class="form-outline mb-4">
+            <input
+              name="description"
+              type="text"
+              class="form-control"
+              placeholder="Type description"
+              value="{{category.description}}"
+            />
+          </div>
+          <div class="form-outline mb-4">
+            <input
+              name="image"
+              type="file"
+              class="form-control"
+              placeholder="Chose product image"
+            />
+          </div>
+          {{!-- <a href="/admin/edit-category/{{this._id}}"> <button type="submit" class="btn btn-primary">Submit</button></a> --}}
+          <button type="submit" class="btn btn-primary">Submit</button>
+
+        </form>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 </div>

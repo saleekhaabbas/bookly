@@ -12,6 +12,7 @@ const db = require("./config/connection");
 const session = require("express-session");
 const nocache = require("nocache");
 const fileUpload = require("express-fileupload");
+let handlebars = require("handlebars");
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
@@ -30,6 +31,35 @@ app.engine(
     userDir: __dirname + "/views/user/",
     partialsDir: __dirname + "/views/partials",
   })
+);
+handlebars.registerHelper(
+  "when",
+  function (operand_1, operator, operand_2, options) {
+    var operators = {
+        eq: function (l, r) {
+          return l == r;
+        },
+        noteq: function (l, r) {
+          return l != r;
+        },
+        gt: function (l, r) {
+          return Number(l) > Number(r);
+        },
+        or: function (l, r) {
+          return l || r;
+        },
+        and: function (l, r) {
+          return l && r;
+        },
+        "%": function (l, r) {
+          return l % r === 0;
+        },
+      },
+      result = operators[operator](operand_1, operand_2);
+
+    if (result) return options.fn(this);
+    else return options.inverse(this);
+  }
 );
 app.use(logger("dev"));
 app.use(express.json());

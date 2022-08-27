@@ -5,7 +5,7 @@
       <div class="col-md-8 col-lg-6">
         <div class="header">
 
-          <h2>fghjk</h2>
+          <h2></h2>
         </div>
       </div>
     </div>
@@ -23,13 +23,13 @@
                 height="100"
               />
               <ul>
-                <li><a href="/add-to-wishlist/{{this._id}}"><img
+                <li><a onclick="addToWishlist('{{this._id}}')"><img
                       src="/public/product-images/heart.svg"
                       alt=""
                       width="30px"
                       height="25px"
                     /></a></li>
-                <li><a href="/add-to-cart/{{this._id}}">
+                <li><a onclick="addToCart('{{this._id}}')">
                     <img
                       src="/public/product-images/cart.svg"
                       alt=""
@@ -57,4 +57,50 @@
 <script
   src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"
 ></script>
-<script src="/public/javascripts/script.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+  function addToCart(proId){
+    $.ajax({
+      url:'/add-to-cart/'+proId,
+      method:'get',
+      success:(response)=>{
+        if(response.status){
+           let  count=$('#cart-count').html()
+            swal({
+  title: "Good job!",
+  text: "This product added to your cart",
+  icon: "success",
+  button: "Ok",
+});
+           count=parseInt(count)+1
+           $("#cart-count").html(count)
+        }
+        
+      }
+    })
+
+  }
+</script>
+<script>
+  function addToWishlist(proId){
+    $.ajax({
+      url:'/add-to-wishlist/'+proId,
+      method:'get',
+      success:(response)=>{
+        if(response.status){
+           let  count=$('#wish-count').html()
+           swal({
+  title: "Good job!",
+  text: "This product added to your wishlist",
+  icon: "success",
+  button: "Ok",
+});
+           count=parseInt(count)+1
+           $("#wish-count").html(count)
+        }
+        
+      }
+    })
+
+  }
+</script>

@@ -1,0 +1,44 @@
+
+    <div class="row">
+      <!-- Single Product -->
+      {{#each product}}
+        <div class="col-md-6 col-lg-4 col-xl-3">
+          <div id="product-1" class="single-product">
+
+            <div class="part-1">
+              <img
+                src="../../public/product-images/{{this.image}}"
+                class="img-fluid"
+                width="100%"
+                height="100"
+              />
+              <ul>
+                <li><a href="/add-to-wishlist/{{this._id}}"><img
+                      src="/public/product-images/heart.svg"
+                      alt=""
+                      width="30px"
+                      height="25px"
+                    /></a></li>
+                <li><a href="/add-to-cart/{{this._id}}">
+                    <img
+                      src="/public/product-images/cart.svg"
+                      alt=""
+                      class="first"
+                      width="30px"
+                      height=" 25px"
+                    /></a></li>
+
+              </ul>
+            </div>
+            <div class="part-2">
+              <h3 class="product-title"><b>{{this.product}}</b></h3>
+              <h4 class="product-price">Rs.{{this.price}}</h4><br />
+              <h4>{{this.Category}}</h4><br />
+              <h4>{{this.author}}</h4>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+      <!-- Single Product -->
+
+    </div>

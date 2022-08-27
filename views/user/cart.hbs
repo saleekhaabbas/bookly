@@ -34,7 +34,7 @@
                             </div>
                             <div class="col" id="{{this.product._id}}2">{{this.productTotal}}</div>
                             <div>
-                               <a type="button" href="/deleteCartProduct/{{this._id}}/{{this.product._id}}" class="btn btn-outline-danger">Remove</a> 
+                               <a type="button" href="/deleteCartProduct/{{this._id}}/{{this.product._id}}" class="btn btn-outline-danger"onclick="return confirm('Are you sure you want to delete this product?')">Remove</a> 
                             </div>
                            
                         </div>
@@ -64,10 +64,7 @@
             <div class="col-sm-12 empty-cart-cls text-center mb-5 " style="margin-top:200px ;">
                 <img src="https://cdn-icons-png.flaticon.com/512/678/678451.png" width="130" height="130" class="img-fluid mb-5 mr-3">
                 <h3 class="mb-5"><strong>Your Cart is Empty</strong></h3>
-                {{!-- <button type="button" class="btn btn-outline-secondary">
-                <a href="/shop" class="primary-btn mt-5 mb-5">Shop now </a>
-                </button> --}}
-                {{!-- <button class="btn btn-light btn-rounded"><a href="/view-product">Shop now</a></button> --}}
+               
                 <div class="back-to-shop"><a href="/view-product">&leftarrow;</a><span class="text-muted">Back to shop</span></div>
             </div>
           {{/if}}

@@ -4,7 +4,7 @@
     <table class="table mt-5">
       <thead>
         <tr>
-          <th scope="col">Date</th>
+          <th scope="col" width="100px">Date</th>
           <th scope="col">Address</th>
           <th scope="col">Pincode</th>
           <th scope="col">Mobile</th>
@@ -30,17 +30,18 @@
               <a
                 href="/view-order-products/{{this._id}}"
                 class="btn btn-primary"
-              >View Products</a>
-              </td>
-              {{#if deliveryDetails.action}}
-              <td scope="row">
-               <a
-                href="/cancel-order/{{this._id}}"
-                class="btn btn-danger"
-              >Cancel order</a>
+              >Details</a>
             </td>
+            {{#if deliveryDetails.action}}
+              <td scope="row">
+                <a
+                  href="/cancel-order/{{this._id}}"
+                  class="btn btn-danger"
+                  onclick="return confirm('Are you sure you want to delete this order?')"
+                >Cancel</a>
+              </td>
             {{else}}
-            <td scope="row" class="text-danger">Order canceled</td>
+              <td scope="row" class="text-danger">Order canceled</td>
             {{/if}}
           </tr>
         {{/each}}
