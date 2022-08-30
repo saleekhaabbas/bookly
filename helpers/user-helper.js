@@ -408,6 +408,7 @@ module.exports = {
           .get()
           .collection(collection.ORDER_COLLECTION)
           .find({ userId: objectId(userId) })
+          .sort({ _id: -1 })
           .toArray();
         resolve(orders);
       } catch (error) {

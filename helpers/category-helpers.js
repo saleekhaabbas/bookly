@@ -12,21 +12,30 @@ module.exports = {
         .collection("category")
         .insertOne(category)
         .then((data) => {});
+      return {
+        success: true,
+        message: "Category added successfully",
+      };
+    } else {
+      return {
+        success: false,
+        message: "Category already exists",
+      };
     }
   },
   getAllCategory: () => {
     return new Promise(async (resolve, reject) => {
-     try {
-       const category = await db
-         .get()
-         .collection(collection.CATEGORY_COLLECTION)
-         .find()
-         .sort({ _id: -1 })
-         .toArray();
-       resolve(category);
-     } catch (error) {
-      reject(error);
-     }
+      try {
+        const category = await db
+          .get()
+          .collection(collection.CATEGORY_COLLECTION)
+          .find()
+          .sort({ _id: -1 })
+          .toArray();
+        resolve(category);
+      } catch (error) {
+        reject(error);
+      }
     });
   },
   getSelectedCategory: (catItem) => {

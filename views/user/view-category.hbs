@@ -4,8 +4,7 @@
     <div class="row justify-content-center text-center">
       <div class="col-md-8 col-lg-6">
         <div class="header">
-
-          <h2></h2>
+          <h2>{{catItem}}</h2>
         </div>
       </div>
     </div>
@@ -59,48 +58,16 @@
 ></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
-  function addToCart(proId){
-    $.ajax({
-      url:'/add-to-cart/'+proId,
-      method:'get',
-      success:(response)=>{
-        if(response.status){
-           let  count=$('#cart-count').html()
-            swal({
-  title: "Good job!",
-  text: "This product added to your cart",
-  icon: "success",
-  button: "Ok",
-});
-           count=parseInt(count)+1
-           $("#cart-count").html(count)
-        }
-        
-      }
-    })
-
-  }
+  function addToCart(proId){ $.ajax({ url:'/add-to-cart/'+proId, method:'get',
+  success:(response)=>{ if(response.status){ let count=$('#cart-count').html()
+  swal({ title: "Good job!", text: "This product added to your cart", icon:
+  "success", button: "Ok", }); count=parseInt(count)+1
+  $("#cart-count").html(count) } } }) }
 </script>
 <script>
-  function addToWishlist(proId){
-    $.ajax({
-      url:'/add-to-wishlist/'+proId,
-      method:'get',
-      success:(response)=>{
-        if(response.status){
-           let  count=$('#wish-count').html()
-           swal({
-  title: "Good job!",
-  text: "This product added to your wishlist",
-  icon: "success",
-  button: "Ok",
-});
-           count=parseInt(count)+1
-           $("#wish-count").html(count)
-        }
-        
-      }
-    })
-
-  }
+  function addToWishlist(proId){ $.ajax({ url:'/add-to-wishlist/'+proId,
+  method:'get', success:(response)=>{ if(response.status){ let
+  count=$('#wish-count').html() swal({ title: "Good job!", text: "This product
+  added to your wishlist", icon: "success", button: "Ok", });
+  count=parseInt(count)+1 $("#wish-count").html(count) } } }) }
 </script>

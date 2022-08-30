@@ -259,15 +259,14 @@ module.exports = {
           .aggregate([
             {
               $match: {
-                status: "pending",
+                status: "cancelled",
               },
             },
 
             {
               $count: "number",
             },
-          ])
-          .toArray();
+          ]).toArray();
         resolve(count);
       } catch (err) {
         reject(err);
